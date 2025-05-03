@@ -1,5 +1,5 @@
 import './App.css';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 
 function Bubble() {
@@ -8,6 +8,22 @@ function Bubble() {
   function handleClick() {
     setIsPopped(true);
   };
+
+  useEffect(() => {
+    let timer;
+
+    if (isPopped) {
+      timer = setTimeout(() => {
+        setIsPopped(false);
+      }, 2000);
+    }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [isPopped])
 
   return <button className={isPopped ? 'popped' : 'bubble'} onClick={handleClick} disabled={isPopped}></button>
 }
