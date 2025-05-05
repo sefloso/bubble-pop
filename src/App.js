@@ -2,25 +2,22 @@ import './App.css';
 import {useState, useEffect} from 'react';
 
 
-function Bubble() {
+function Bubble({onPop}) {
   const [isPopped, setIsPopped] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
 
   function handleClick() {
     setIsPopped(true);
+    onPop();
   };
 
   // tracks how long bubble has been on screen
   // can edit 3000 to change time-out time.
   useEffect(() => {
-    console.log("First useEffect running. isPopped:", isPopped, "timedOut:", timedOut);
-
     let lifeTimer;
 
     if (!isPopped && !timedOut) {
-      console.log("Setting life timer");
       lifeTimer = setTimeout(() => {
-        console.log("Timer expired! Setting timedOut to true");
         setTimedOut(true);
       }, 3000)
     }
@@ -34,12 +31,9 @@ function Bubble() {
   }, [isPopped, timedOut])
 
   useEffect(() => {
-    console.log("Second useEffect running. isPopped:", isPopped, "timedOut:", timedOut);
     let respawnTimer;
     if (isPopped || timedOut) {
-      console.log("Setting respawn timer");
       respawnTimer = setTimeout(() => {
-        console.log("Respawn timer expired! Resetting states");
         setIsPopped(false);
         setTimedOut(false);
         // bubble will generate in random 2 sec interval, edit 2000 to change interval (1k is 1 second)
@@ -48,7 +42,6 @@ function Bubble() {
 
     return () => {
       if (respawnTimer) {
-        console.log("Clearing respawn timer");
         clearTimeout(respawnTimer);
       }
     };
@@ -58,11 +51,18 @@ function Bubble() {
 }
 
 function Game() {
+  const [score, setScore] = useState(0);
+
+  function incrementScore() {
+    setScore(prevScore => prevScore + 1);
+  }
 
   return(
     <>  
     <div className='game-area'>
-      <Bubble />
+      <h1>{score}</h1>
+      <Bubble onPop={incrementScore}/>
+      <Bubble onPop={incrementScore}/>
     </div>
     </>
   )
