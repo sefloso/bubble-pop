@@ -12,7 +12,7 @@ function Bubble({onPop}) {
   };
 
   // tracks how long bubble has been on screen
-  // can edit 3000 to change time-out time.
+  // can edit 3000 to change time-out time. maybe can have set time + a random range, i.e. 3000 + (Math.random() * 5000)
   useEffect(() => {
     let lifeTimer;
 
@@ -87,8 +87,8 @@ function Game() {
     const newBubble = {
       // placeholder identifier
       bubbleId : Date.now(),
-      x : Math.random() * (containerWidth - bubbleSize),
-      y : Math.random() * (containerHeight - bubbleSize),
+      x : Math.random() * (containerDimensions.containerWidth - bubbleSize),
+      y : Math.random() * (containerDimensions.containerHeight - bubbleSize),
       isPopped : false,
       timedOut : false,
       createdAt : Date.now()
