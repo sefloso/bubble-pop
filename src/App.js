@@ -51,16 +51,41 @@ function Bubble({onPop}) {
 }
 
 function Game() {
+  const [bubbles, setBubbles] = useState([]);
   const [score, setScore] = useState(0);
 
   function incrementScore() {
     setScore(prevScore => prevScore + 1);
   }
 
+  // attempting to lift state up from Bubble component to Game component
+  function addBubble() {
+    const newBubble = {
+      // placeholder identifier
+      bubbleId : Date.now(),
+      x : Math.random() * (containerWidth - bubbleSize),
+      y : Math.random() * (containerHeight - bubbleSize),
+      isPopped : false,
+      timedOut : false,
+      createdAt : Date.now()
+    };
+
+    setBubbles(prevBubbles => [...prevBubbles, newBubble]);
+  }
+
+  function removeBubble(id) {
+    setBubbles(prevBubbles => prevBubbles.filter(bubble => bubble.id !== id));
+  }
+
+  function updateBubble(id, updates) {
+    setBubbles(prevBubbles => prevBubbles.map(bubble => bubble.id === id ? {...bubble, ...updates} : bubble));
+  }
+
   return(
     <>  
     <div className='game-area'>
       <h1>{score}</h1>
+      <Bubble onPop={incrementScore}/>
       <Bubble onPop={incrementScore}/>
       <Bubble onPop={incrementScore}/>
     </div>
