@@ -2,9 +2,15 @@ import './App.css';
 import {useState, useEffect} from 'react';
 
 
-function Bubble({onPop}) {
+function Bubble({xPos, yPos, onPop}) {
   const [isPopped, setIsPopped] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
+
+  const bubbleStyle = {
+    position: 'absolute',
+    left: `${xPos}px`,
+    top: `${yPos}px`
+  };
 
   function handleClick() {
     setIsPopped(true);
@@ -47,7 +53,7 @@ function Bubble({onPop}) {
     };
   }, [isPopped, timedOut])
 
-  return <button className={isPopped ? 'popped' : timedOut ? 'timed-out' : 'bubble'} onClick={handleClick} disabled={isPopped || timedOut}></button>
+  return <button className={isPopped ? 'popped' : timedOut ? 'timed-out' : 'bubble'} onClick={handleClick} disabled={isPopped || timedOut} style = {bubbleStyle}></button>
 }
 
 function Game() {
@@ -105,16 +111,30 @@ function Game() {
     setBubbles(prevBubbles => prevBubbles.map(bubble => bubble.id === id ? {...bubble, ...updates} : bubble));
   }
 
+  // bubble spawner
+  useEffect(() => {
+    // first bubble
+    addBubble();
+
+    const spawnInterval = setInterval(() => {
+      if (bubbles.length < 10) {
+        addBubble();
+      }
+    }, 2000)
+  }, [bubbles.length])
+
   return(
     <>  
     <div className='game-area'>
       <h1>{score}</h1>
-      <div>
-      <Bubble onPop={incrementScore}/>
-      <Bubble onPop={incrementScore}/>
-      <Bubble onPop={incrementScore}/>
+            {bubbles.map(bubble => (
+      <Bubble 
+        xPos={bubble.x}
+        yPos={bubble.y}
+        onPop={incrementScore}
+      />
+    ))}
       </div>
-    </div>
     </>
   )
 }
