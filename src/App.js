@@ -53,6 +53,30 @@ function Bubble({onPop}) {
 function Game() {
   const [bubbles, setBubbles] = useState([]);
   const [score, setScore] = useState(0);
+  const bubbleSize = 20;
+  const [containerDimensions, setContainerDimensions] = useState({
+    containerHeight : window.innerHeight,
+    containerWidth : window.innerWidth
+  });
+
+  // dyanamically resize game area
+  useEffect(() => {
+    function updateDimensions() {
+      setContainerDimensions(
+        {containerHeight : window.innerHeight,
+          containerWidth : window.innerWidth
+        }
+      );
+    };
+
+    // listen for window resize
+    window.addEventListener('resize', updateDimensions);
+
+    // cleanup
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+    };
+  }, [])
 
   function incrementScore() {
     setScore(prevScore => prevScore + 1);
@@ -85,9 +109,11 @@ function Game() {
     <>  
     <div className='game-area'>
       <h1>{score}</h1>
+      <div>
       <Bubble onPop={incrementScore}/>
       <Bubble onPop={incrementScore}/>
       <Bubble onPop={incrementScore}/>
+      </div>
     </div>
     </>
   )
