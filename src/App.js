@@ -13,6 +13,10 @@ function Bubble({xPos, yPos, onPop}) {
   };
 
   function handleClick() {
+
+    if (timedOut) {
+      setTimedOut(false);
+    }
     setIsPopped(true);
     onPop();
   };
@@ -43,7 +47,7 @@ function Bubble({xPos, yPos, onPop}) {
         setIsPopped(false);
         setTimedOut(false);
         // bubble will generate in random 2 sec interval, edit 2000 to change interval (1k is 1 second)
-      }, Math.floor(Math.random() * 2000) + 1);
+      }, Math.floor(Math.random() * 5000) + 1);
     }
 
     return () => {
@@ -53,7 +57,7 @@ function Bubble({xPos, yPos, onPop}) {
     };
   }, [isPopped, timedOut])
 
-  return <button className={isPopped ? 'popped' : timedOut ? 'timed-out' : 'bubble'} onClick={handleClick} disabled={isPopped || timedOut} style = {bubbleStyle}></button>
+  return <button className={isPopped ? 'popped' : timedOut ? 'timed-out' : 'bubble'} onClick={handleClick} disabled={isPopped} style = {bubbleStyle}></button>
 }
 
 function Game() {
@@ -96,11 +100,12 @@ function Game() {
       x : Math.random() * (containerDimensions.containerWidth - bubbleSize),
       y : Math.random() * (containerDimensions.containerHeight - bubbleSize),
       isPopped : false,
-      timedOut : false,
-      createdAt : Date.now()
+      timedOut : false
     };
 
     setBubbles(prevBubbles => [...prevBubbles, newBubble]);
+    // Bubble components aren't being added to the bubbles array, hence they'll keep spawning b/c bubbles.length is always 0.
+    console.log(bubbles);
   }
 
   function removeBubble(id) {
@@ -113,15 +118,12 @@ function Game() {
 
   // bubble spawner
   useEffect(() => {
-    // first bubble
-    addBubble();
-
     const spawnInterval = setInterval(() => {
       if (bubbles.length < 10) {
         addBubble();
       }
     }, 2000)
-  }, [bubbles.length])
+  }, [])
 
   return(
     <>  
@@ -129,6 +131,7 @@ function Game() {
       <h1>{score}</h1>
             {bubbles.map(bubble => (
       <Bubble 
+        id ={bubble.id}
         xPos={bubble.x}
         yPos={bubble.y}
         onPop={incrementScore}
@@ -140,3 +143,5 @@ function Game() {
 }
 
 export default Game;
+
+// can implement DB stuff w/ users, ID, username, password, email, high-scores, etc.
