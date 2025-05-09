@@ -2,8 +2,7 @@ import './App.css';
 import {useState, useEffect} from 'react';
 
 
-function Bubble({xPos, yPos, onPop}) {
-  const [isPopped, setIsPopped] = useState(false);
+function Bubble({id, xPos, yPos, onPop, isPopped}) {
   const [timedOut, setTimedOut] = useState(false);
 
   const bubbleStyle = {
@@ -13,12 +12,7 @@ function Bubble({xPos, yPos, onPop}) {
   };
 
   function handleClick() {
-
-    if (timedOut) {
-      setTimedOut(false);
-    }
-    setIsPopped(true);
-    onPop();
+    onPop(id);
   };
 
   // tracks how long bubble has been on screen
@@ -44,7 +38,6 @@ function Bubble({xPos, yPos, onPop}) {
     let respawnTimer;
     if (isPopped || timedOut) {
       respawnTimer = setTimeout(() => {
-        setIsPopped(false);
         setTimedOut(false);
         // bubble will generate in random 2 sec interval, edit 2000 to change interval (1k is 1 second)
       }, Math.floor(Math.random() * 5000) + 1);
@@ -96,7 +89,7 @@ function Game() {
   function addBubble() {
     const newBubble = {
       // placeholder identifier
-      bubbleId : Date.now(),
+      id : Date.now(),
       x : Math.random() * (containerDimensions.containerWidth - bubbleSize),
       y : Math.random() * (containerDimensions.containerHeight - bubbleSize),
       isPopped : false,
@@ -104,13 +97,13 @@ function Game() {
     };
 
     setBubbles(prevBubbles => [...prevBubbles, newBubble]);
-    // Bubble components aren't being added to the bubbles array, hence they'll keep spawning b/c bubbles.length is always 0.
-    console.log(bubbles);
   }
 
-  function removeBubble(id) {
-    setBubbles(prevBubbles => prevBubbles.filter(bubble => bubble.id !== id));
+  function popBubble(id) {
+    setBubbles(prevBubbbles => prevBubbbles.map(bubble => bubble.id === id ? {...bubble, isPopped:true} : bubble));
+    incrementScore();
   }
+
 
   function updateBubble(id, updates) {
     setBubbles(prevBubbles => prevBubbles.map(bubble => bubble.id === id ? {...bubble, ...updates} : bubble));
@@ -120,9 +113,7 @@ function Game() {
   useEffect(() => {
     const spawnInterval = setInterval(() => {
       if (bubbles.length < 10) {
-        console.log('more bubbles!')
         addBubble();
-        console.log(`total bubble length: ${bubbles.length}`)
       }
     }, 2000)
 
@@ -142,7 +133,8 @@ function Game() {
         id ={bubble.id}
         xPos={bubble.x}
         yPos={bubble.y}
-        onPop={incrementScore}
+        onPop={popBubble}
+        isPopped={bubble.isPopped}
       />
     ))}
       </div>
