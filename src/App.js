@@ -85,7 +85,7 @@ function Game() {
     // cleanup
     return () => {
       window.removeEventListener('resize', updateDimensions);
-    };
+    };  
   }, [])
 
   function incrementScore() {
@@ -120,10 +120,18 @@ function Game() {
   useEffect(() => {
     const spawnInterval = setInterval(() => {
       if (bubbles.length < 10) {
+        console.log('more bubbles!')
         addBubble();
+        console.log(`total bubble length: ${bubbles.length}`)
       }
     }, 2000)
-  }, [])
+
+    return () => {
+      if (spawnInterval) {
+        clearInterval(spawnInterval);
+      }
+    };
+  }, [bubbles])
 
   return(
     <>  
