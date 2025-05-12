@@ -3,6 +3,9 @@ import {useState, useEffect} from 'react';
 
 
 function Bubble({id, xPos, yPos, onPop, isPopped, onTimeout, timedOut, onRespawn}) {
+  // change these values to edit how long bubble lives and the range in which it will respawn
+  const bubbleLife = 5000;
+  const respawnRange = 2000;
 
   const bubbleStyle = {
     position: 'absolute',
@@ -15,14 +18,14 @@ function Bubble({id, xPos, yPos, onPop, isPopped, onTimeout, timedOut, onRespawn
   };
 
   // tracks how long bubble has been on screen
-  // can edit 3000 to change time-out time. maybe can have set time + a random range, i.e. 3000 + (Math.random() * 5000)
+  // can edit bubbleLife to change time-out time. maybe can have set time + a random range, i.e. 3000 + (Math.random() * 5000)
   useEffect(() => {
     let lifeTimer;
 
     if (!isPopped && !timedOut) {
       lifeTimer = setTimeout(() => {
         onTimeout(id);
-      }, 3000)
+      }, bubbleLife)
     }
   
     // clean up timer
@@ -31,7 +34,7 @@ function Bubble({id, xPos, yPos, onPop, isPopped, onTimeout, timedOut, onRespawn
         clearTimeout(lifeTimer);
       }
     }
-  }, [isPopped, timedOut])
+  }, [isPopped, timedOut, id, onRespawn])
 
   useEffect(() => {
     let respawnTimer;
@@ -39,7 +42,7 @@ function Bubble({id, xPos, yPos, onPop, isPopped, onTimeout, timedOut, onRespawn
       respawnTimer = setTimeout(() => {
         onRespawn(id);
         // bubble will generate in random 2 sec interval, edit 2000 to change interval (1k is 1 second)
-      }, Math.floor(Math.random() * 5000) + 1);
+      }, Math.floor(Math.random() * respawnRange) + 1);
     }
 
     return () => {
@@ -47,12 +50,13 @@ function Bubble({id, xPos, yPos, onPop, isPopped, onTimeout, timedOut, onRespawn
         clearTimeout(respawnTimer);
       }
     };
-  }, [isPopped, timedOut])
+  }, [isPopped, timedOut, id, onTimeout])
 
   return <button className={isPopped ? 'popped' : timedOut ? 'timed-out' : 'bubble'} onClick={handleClick} disabled={isPopped} style = {bubbleStyle}></button>
 }
 
 function Game() {
+  const spawnRate = 1000;
   const [bubbles, setBubbles] = useState([]);
   const [score, setScore] = useState(0);
   const bubbleSize = 20;
@@ -121,7 +125,7 @@ function Game() {
       if (bubbles.length < 5) {
         addBubble();
       }
-    }, 2000)
+    }, spawnRate)
 
     return () => {
       if (spawnInterval) {
