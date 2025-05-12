@@ -1,0 +1,7 @@
+.game-area {
+  max-width: fit-content;
+  max-height: fit-content;
+  margin-top: 25%;
+  margin-right: auto;
+  margin-left: auto;
+}
