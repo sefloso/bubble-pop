@@ -2,8 +2,7 @@ import './App.css';
 import {useState, useEffect} from 'react';
 
 
-function Bubble({id, xPos, yPos, onPop, isPopped}) {
-  const [timedOut, setTimedOut] = useState(false);
+function Bubble({id, xPos, yPos, onPop, isPopped, onTimeout, timedOut, onRespawn}) {
 
   const bubbleStyle = {
     position: 'absolute',
@@ -22,7 +21,7 @@ function Bubble({id, xPos, yPos, onPop, isPopped}) {
 
     if (!isPopped && !timedOut) {
       lifeTimer = setTimeout(() => {
-        setTimedOut(true);
+        onTimeout(id);
       }, 3000)
     }
   
@@ -38,7 +37,7 @@ function Bubble({id, xPos, yPos, onPop, isPopped}) {
     let respawnTimer;
     if (isPopped || timedOut) {
       respawnTimer = setTimeout(() => {
-        setTimedOut(false);
+        onRespawn(id);
         // bubble will generate in random 2 sec interval, edit 2000 to change interval (1k is 1 second)
       }, Math.floor(Math.random() * 5000) + 1);
     }
@@ -89,7 +88,7 @@ function Game() {
   function addBubble() {
     const newBubble = {
       // placeholder identifier
-      id : Date.now(),
+      id : Date.now() + Math.random(),
       x : Math.random() * (containerDimensions.containerWidth - bubbleSize),
       y : Math.random() * (containerDimensions.containerHeight - bubbleSize),
       isPopped : false,
@@ -104,15 +103,22 @@ function Game() {
     incrementScore();
   }
 
+  function timeoutBubble(id) {
+    setBubbles(prevBubbles => prevBubbles.map(bubble => bubble.id === id ? {...bubble, timedOut:true} : bubble));
+  }
 
-  function updateBubble(id, updates) {
-    setBubbles(prevBubbles => prevBubbles.map(bubble => bubble.id === id ? {...bubble, ...updates} : bubble));
+  function respawnBubble(id) {
+    setBubbles(prevBubbles => prevBubbles.filter(bubble => bubble.id !== id));
+
+    setTimeout(() => {
+      addBubble();
+    }, Math.floor(Math.random() * 5000) + 1);
   }
 
   // bubble spawner
   useEffect(() => {
     const spawnInterval = setInterval(() => {
-      if (bubbles.length < 10) {
+      if (bubbles.length < 5) {
         addBubble();
       }
     }, 2000)
@@ -130,11 +136,16 @@ function Game() {
       <h1>{score}</h1>
             {bubbles.map(bubble => (
       <Bubble 
+        key = {bubble.id}
         id ={bubble.id}
         xPos={bubble.x}
         yPos={bubble.y}
-        onPop={popBubble}
+        onPop={() => popBubble(bubble.id)}
         isPopped={bubble.isPopped}
+        onTimeout={() => timeoutBubble(bubble.id)}
+        timedOut={bubble.timedOut}
+        onRespawn={() => respawnBubble(bubble.id)}
+
       />
     ))}
       </div>
