@@ -11,14 +11,15 @@ function HomePage() {
     }
 
     return (
-        <>
-        <div className="logo">
-            <img src={logo} alt="Logo" />
+        <div className="home-container">
+            <div className="logo">
+                <img src={logo} alt="Logo" />
+            </div>
+
+            <div className="user-options">
+                <button onClick={startGame}>Start Game</button>
+            </div>
         </div>
-        <div className="user-options">
-            <button onClick={startGame}>Start Game</button>
-        </div>
-        </>
     );
 };
 
