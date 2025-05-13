@@ -1,0 +1,15 @@
+.logo {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: auto;
+  max-height: auto;
+  margin-top: 10%;
+}
+
+.user-options {
+  max-width: fit-content;
+  max-height: fit-content;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: auto;
+}
