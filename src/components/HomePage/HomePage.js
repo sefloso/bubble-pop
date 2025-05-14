@@ -18,6 +18,8 @@ function HomePage() {
 
             <div className="user-options">
                 <button onClick={startGame}>Start Game</button>
+                <button>Log In</button>
+                <button>Stats</button>
             </div>
         </div>
     );
