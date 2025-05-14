@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import logo from './bubbleLogo.png';
 import './HomePage.css';
+import Header from '../Header/Header';
 
 
 function HomePage() {
@@ -12,6 +13,7 @@ function HomePage() {
 
     return (
         <div className="home-container">
+            <Header />
             <div className="logo">
                 <img src={logo} alt="Logo" />
             </div>
