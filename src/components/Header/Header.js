@@ -9,10 +9,12 @@ function Header() {
             <div className="navbar-logo">
                 <img src={logo} alt="Logo"></img>
             </div>
-            <nav>
+            <nav className="nav">
                 <ul>
-                    <li><Link to='/'>Home</Link></li>
-                    <li><Link to='/game'>Play</Link></li>
+                    <li><Link to='/'>home</Link></li>
+                    <li><Link to='/game'>play</Link></li>
+                    <li><Link to='/stats'>stats</Link></li>
+                    <li><Link to='/login'>log in</Link></li>
                 </ul>
             </nav>
         </header>

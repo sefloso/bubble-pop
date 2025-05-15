@@ -3,9 +3,16 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #333;
+  background-color: #ffffff;
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1000;
 }
 
 .navbar-logo img {
@@ -26,7 +33,7 @@
 }
 
 .nav a {
-  color: white;
+  color: rgb(0, 0, 0);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
@@ -36,19 +43,3 @@
   color: #88ccff; 
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 600px) {
-  .header {
-    flex-direction: column;
-    padding: 1rem;
-  }
-  
-  .nav ul {
-    margin-top: 1rem;
-  }
-  
-  .nav li {
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
-}

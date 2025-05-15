@@ -18,12 +18,28 @@
     animation: bobbing 3s ease-in-out infinite;
 }
 
-.user-options {
-    display: flex;
-    flex-direction: row;
-    text-align: center;
+.home-nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
+.home-nav li {
+    display: flex;
+  text-align: center;
+}
+
+.home-nav a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.home-nav a:hover {
+  color: #88ccff; 
+}
 @keyframes bobbing {
     0% {
         transform: translateY(0px) rotate(0deg);
