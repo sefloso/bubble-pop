@@ -67,6 +67,34 @@ function Game() {
     }, Math.floor(Math.random() * 5000) + 1);
   }
 
+  function saveScore() {
+    const playerName = prompt("Enter your name");
+
+    if (!playerName) {
+      return;
+    }
+
+    fetch('http://localhost:3001/api/scores', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        player: playerName,
+        score: score
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('score saved successfully (not really again', data);
+      alert('Score saved! (jk)');
+    })
+    .catch(err => {
+      console.error('error savings score:', err);
+      alert("error saving score");
+    })
+  }
+
   // bubble spawner
   useEffect(() => {
     const spawnInterval = setInterval(() => {
@@ -86,7 +114,8 @@ function Game() {
     <>  
     <div className='game-area'>
       <h1>{score}</h1>
-            {bubbles.map(bubble => (
+      <button onClick={saveScore}>Save Score</button>
+      {bubbles.map(bubble => (
       <Bubble 
         key = {bubble.id}
         id ={bubble.id}
